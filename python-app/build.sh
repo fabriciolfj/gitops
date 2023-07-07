@@ -1,0 +1,1 @@
+docker build -f Dockerfile -t quay.io/fabricio211/pythonapp:latest .
