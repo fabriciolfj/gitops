@@ -94,3 +94,37 @@ metadata:
   uid: 2707fa44-d5ec-4497-b415-05214c707b19
 
 ```
+
+## helm
+- um gerenciador de pacotes para kubernetes
+- podemos criar um template e colocar valores nele em tempo de execução, através de um Chart.yaml ou values.yaml
+- comando para buildar
+```
+helm template .
+```
+- comando para instalar (execute na raiz)
+```
+helm install pacman .
+```
+- para empacotar afim de distribuir seu Chart
+```
+helm package .
+```
+
+#### uso de repositorios remotos
+- podemos instalar charts de repositórios remotos, para isso precisamos primeiro adicionar:
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+- atualizar
+```
+helm update .
+```
+- por fim instalar
+```
+helm install my-db --set postgresql.postgresqlUsername=my-default,postgresql.postgresqlPassword=postgres,postgresql.postgresqlDatabase=mydb,postgresql.persistence.enabled=false bitnami/postgresql
+```
+- caso seu chart tenha alguma dependencia (verificar diretorio music)
+```
+helm dependency update .
+```

@@ -1,0 +1,1 @@
+kubectl get secret music-db-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d

@@ -1,0 +1,1 @@
+helm install music-db --set postgresql.auth.postgresPassword=postgres,postgresql.postgresqlDatabase=mydb,postgresql.persistence.enabled=false .
