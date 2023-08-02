@@ -128,3 +128,118 @@ helm install my-db --set postgresql.postgresqlUsername=my-default,postgresql.pos
 ```
 helm dependency update .
 ```
+- para instalar um chart criado
+```
+helm install nome-test .
+```
+
+## tekton
+- um sistem ci/cd native em nuvem sobre o kubernetes
+- é instalado dentro do k8s
+- instalacao:
+```
+kubectl apply \
+-f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.38.0/release.yaml
+
+kubectl apply \
+-f https://storage.googleapis.com/tekton-releases/triggers/previous/v0.20.1/release.yaml
+
+kubectl apply \
+-f https://storage.googleapis.com/tekton-releases/dashboard/previous/v0.28.0/tekton-dashboard-release.yaml
+```
+- para acessar o dashboard kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines
+- para listar as tasks que nos criamos:
+```
+kubectl get tasks
+```
+
+### repositorios privados
+- para uso de repositorios privados, apos criar o secret, podemos anotar o mesmo no tekton: kubectl annotate secret git-secret "tekton.dev/git-0=https://github.com"
+- apos anotar, anexar a um service account
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tekton-bot-sa
+secrets:
+  - name: git-secret 1
+```
+- abaixo um exemplo via cli, vinculando o service account para realizar o CD, com base no app no repositorio privado
+```
+tkn task start build-app \
+  --serviceaccount='tekton-bot-sa' \ 
+  --param url='https://github.com/gitops-cookbook/tekton-greeter-private.git' \ 
+  --param contextDir='quarkus' \
+  --workspace name=source,emptyDir="" \
+  --showlog
+```
+- para enviar a um registry, devemos:
+```
+criar um secret
+kubectl create secret docker-registry container-registry-secret \
+  --docker-server='quay.io' \
+  --docker-username='fabricio211' \
+  --docker-password='megatron12'
+  
+criar um serviceaccount
+kubectl create serviceaccount tekton-registry-sa
+
+vincular o secret
+kubectl patch serviceaccount tekton-registry-sa \
+  -p '{"secrets": [{"name": "container-registry-secret"}]}'
+  
+por fim configurar a task 
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: build-app-run-
+  labels:
+    app.kubernetes.io/managed-by: tekton-pipelines
+    tekton.dev/task: build-app
+spec:
+  params:
+    - name: contextDir
+      value: quarkus
+    - name: revision
+      value: master
+    - name: sslVerify
+      value: "false"
+    - name: subdirectory
+      value: ""
+    - name: tlsVerify
+      value: "false"
+    - name: url
+      value: https://github.com/gitops-cookbook/tekton-tutorial-greeter.git
+  taskRef:
+    kind: Task
+    name: build-app
+  workspaces:
+    - emptyDir: {}
+      name: source  
+```
+
+## usando o tekton para entregas de apps
+- crie um serviceaccount
+```
+kubectl create serviceaccount tekton-deployer-sa
+```
+- vamos dar permissão para implantar o app no k8s, para isso devemos criar uma role (papel com permissoes)
+- depois criar um rolebinding para vincular a role ao service account
+- por fim criar a task para implantar (todos os arquivos encontram-se  no path tekton/entrega)
+
+## pipeline com tekton
+- primeiro precisamos instalar alguns recursos (git clone, buildah, kubernetes actions), como:
+```
+tkn hub install task git-clone
+tkn hub install task maven
+tkn hub install task buildah
+tkn hub install task kubernetes-actions
+```
+
+- para pipeline, segue:
+```
+crie o secret com as credenciais do registry
+vincule ao service account
+execute os arquivos role, role-binding e tekton-greeter-pipeline-hub.yml
+por fim execute o init.sh, para dar start a pipeline
+```

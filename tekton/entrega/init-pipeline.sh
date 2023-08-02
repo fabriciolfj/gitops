@@ -1,0 +1,13 @@
+tkn pipeline start tekton-greeter-pipeline-hub \
+  --serviceaccount='tekton-deployer-sa' \
+  --param GIT_REPO='https://github.com/gitops-cookbook/tekton-tutorial-greeter.git' \
+  --param GIT_REF='master' \
+  --param CONTEXT_DIR='quarkus' \
+  --param DESTINATION_IMAGE='quay.io/fabricio211/tekton-greeter:latest' \
+  --param IMAGE_DOCKERFILE='quarkus/Dockerfile' \
+  --param IMAGE_CONTEXT_DIR='quarkus' \
+  --param SCRIPT='kubectl create deploy tekton-greeter --image=quay.io/fabricio211/tekton-greeter:latest' \
+  --workspace name=app-source,claimName=app-source-pvc \
+  --workspace name=maven-settings,emptyDir="" \
+  --use-param-defaults \
+  --showlog

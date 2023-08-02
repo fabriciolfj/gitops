@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: tekton-greeter-pipeline-run-
+spec:
+  params:
+    - name: GIT_REPO
+      value: https://github.com/gitops-cookbook/tekton-tutorial-greeter.git
+    - name: GIT_REF
+      value: "master"
+    - name: DESTINATION_IMAGE
+      value: "quay.io/gitops-cookbook/tekton-greeter:latest"
+    - name: SCRIPT
+      value: |
+        kubectl create deploy tekton-greeter --image=quay.io/gitops-cookbook/tekton-greeter:latest
+  pipelineRef:
+    name: tekton-greeter-pipeline
+  workspaces:
+    - name: source
+      emptyDir: {}

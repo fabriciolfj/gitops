@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: build-app-run-
+  labels:
+    app.kubernetes.io/managed-by: tekton-pipelines
+    tekton.dev/task: build-app
+spec:
+  params:
+    - name: contextDir
+      value: quarkus
+    - name: revision
+      value: master
+    - name: sslVerify
+      value: "false"
+    - name: subdirectory
+      value: ""
+    - name: tlsVerify
+      value: "false"
+    - name: url
+      value: https://github.com/gitops-cookbook/tekton-tutorial-greeter.git
+  taskRef:
+    kind: Task
+    name: build-app
+  workspaces:
+    - emptyDir: {}
+      name: source
