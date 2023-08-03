@@ -246,3 +246,21 @@ por fim execute o init.sh, para dar start a pipeline
 
 # ARGOCD
 - uma ferramenta de entrega contínua declarativa para k8s
+- ela monitora os manifestos de um repositorio e diante configuração, os aplicam no cluster k8s
+- exemplo:
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bgd-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: bgd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/fabriciolfj/gitops.git
+    path: ch07/bgd
+    targetRevision: main
+```
