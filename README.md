@@ -243,3 +243,6 @@ vincule ao service account
 execute os arquivos role, role-binding e tekton-greeter-pipeline-hub.yml
 por fim execute o init.sh, para dar start a pipeline
 ```
+
+# ARGOCD
+- uma ferramenta de entrega contínua declarativa para k8s

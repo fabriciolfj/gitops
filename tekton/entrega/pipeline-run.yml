@@ -9,10 +9,10 @@ spec:
     - name: GIT_REF
       value: "master"
     - name: DESTINATION_IMAGE
-      value: "quay.io/gitops-cookbook/tekton-greeter:latest"
+      value: "quay.io//tekton-greeter:latest"
     - name: SCRIPT
       value: |
-        kubectl create deploy tekton-greeter --image=quay.io/gitops-cookbook/tekton-greeter:latest
+        kubectl create deploy tekton-greeter --image=quay.io/fabricio211/tekton-greeter:latest
   pipelineRef:
     name: tekton-greeter-pipeline
   workspaces:
