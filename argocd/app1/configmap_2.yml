@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config
+data:
+  git.user: fabricio
+  git.email: fabricio.jacob@outlook.com
+  git.commit-message-template: |
+    build: automatic update of {{ .AppName }} 
+
+    {{ range .AppChanges -}} 
+    updates image {{ .Image }} tag '{{ .OldTag }}' to '{{ .NewTag }}'   
+    {{ end -}}

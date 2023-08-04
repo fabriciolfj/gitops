@@ -277,3 +277,42 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argoc
 ```
 kubectl -n argocd create secret generic git-creds --from-literal=username=test --from-literal=password=t232w2s
 ```
+- ness situação, para o argocd conseguir acessar um registry privado devemos criar um secret, configmap
+```
+kubectl create -n argocd secret docker-registry quayio --docker-server =quay.io --docker-username =$QUAY_USERNAME--docker-password=$QUAY_PASSWORD
+```
+- configmap
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config
+data:
+  registries.conf: |
+    registries: 
+    - name: RedHat Quay 
+      api_url: https://quay.io 
+      prefix: quay.io 
+      insecure: yes
+      credentials: pullsecret:argocd/quayio 
+```
+- tambem um configmap com template de commit
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config 
+data:
+  git.user: fabricio 
+  git.email: fabricio.jacob@outlook.com 
+  git.commit-message-template: | 
+    build: automatic update of {{ .AppName }} 
+
+    {{ range .AppChanges -}} 
+    updates image {{ .Image }} tag '{{ .OldTag }}' to '{{ .NewTag }}'   
+    {{ end -}}
+```
+- por fim podemos restringir qual versão da imagem pegar, no exemplo abaixo pegaremos apenas a mudança de features
+```
+argocd-image-updater.argoproj.io/image-list: myalias=quay.io/rhdevelopers/bgd:1.2.x
+```
