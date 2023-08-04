@@ -14,7 +14,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/fabriciolfj/gitops.git
-    path: ch07/bgd
+    path: ch07/bgdui/bgdk
     targetRevision: main
   syncPolicy:
     automated: {}
