@@ -12,3 +12,5 @@ spec:
     repoURL: https://github.com/fabriciolfj/gitops.git
     path: ch07/bgd
     targetRevision: main
+  syncPolicy:
+    automated: {}

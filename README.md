@@ -263,4 +263,8 @@ spec:
     repoURL: https://github.com/fabriciolfj/gitops.git
     path: ch07/bgd
     targetRevision: main
+  syncPolicy:
+    automated: # qualquer mudançca no git reflete no k8s
+      prune: true #se remover o git, remove o app do k8s
+      selfHeal: true  # se mudar alguma coisa na app direto no k8s, ele reimplanta o que está no git
 ```
