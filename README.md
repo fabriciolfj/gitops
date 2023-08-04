@@ -268,3 +268,12 @@ spec:
       prune: true #se remover o git, remove o app do k8s
       selfHeal: true  # se mudar alguma coisa na app direto no k8s, ele reimplanta o que está no git
 ```
+- argocd pode monitorar um registry, ver que uma nova imagem foi gerada da app, atualizar o manifesto com esta, e consequentemente atualizar o k8s
+- para isso precisamos instalar:
+```
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+```
+- para o argocd enviar a atualização da imagem ao repositorio git, aonde encontra-se os manifestos, precisamos de um secret com o token do git
+```
+kubectl -n argocd create secret generic git-creds --from-literal=username=<git_user> --from-literal=password=<git_password_or_token>
+```
