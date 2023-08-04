@@ -316,3 +316,4 @@ data:
 ```
 argocd-image-updater.argoproj.io/image-list: myalias=quay.io/rhdevelopers/bgd:1.2.x
 ```
+- obs: utilizar o kustomizer 
