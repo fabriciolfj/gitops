@@ -18,7 +18,7 @@ spec:
         app: bgd
     spec:
       containers:
-      - image: quay.io/fabricio211/test:1.0.0
+      - image: fabricio211/test:1.0.0
         name: bgd
         env:
         - name: COLOR

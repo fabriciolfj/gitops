@@ -275,5 +275,5 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argoc
 ```
 - para o argocd enviar a atualização da imagem ao repositorio git, aonde encontra-se os manifestos, precisamos de um secret com o token do git
 ```
-kubectl -n argocd create secret generic git-creds --from-literal=username=<git_user> --from-literal=password=<git_password_or_token>
+kubectl -n argocd create secret generic git-creds --from-literal=username=test --from-literal=password=t232w2s
 ```
