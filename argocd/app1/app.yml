@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/fabriciolfj/gitops.git
+    repoURL: https://github.com/fabriciolfj/gitops
     path: ch07/bgd
     targetRevision: main
   syncPolicy:
